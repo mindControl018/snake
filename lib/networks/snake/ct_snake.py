@@ -52,7 +52,11 @@ class Network(nn.Module):
 
     def forward(self, x, batch=None):
         output, cnn_feature = self.dla(x)
+        # output{ct_hm}:20个类的heatmap
+        # output{wh}:heatmap中每个像素的width&height
         with torch.no_grad():
+            # ct(4,100,2) 100个框的center坐标
+            # detection(4,100,6） 在经过nms，后取top100个框的左上右下坐标，分类以及分数
             ct, detection = self.decode_detection(output, cnn_feature.size(2), cnn_feature.size(3))
         if cfg.use_gt_det:
             self.use_gt_detection(output, batch)

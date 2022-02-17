@@ -7,7 +7,7 @@ _network_factory = {
 
 
 def get_network(cfg):
-    arch = cfg.network
+    arch = cfg.network  #'ro_34'
     heads = cfg.heads
     head_conv = cfg.head_conv
     num_layers = int(arch[arch.find('_') + 1:]) if '_' in arch else 0

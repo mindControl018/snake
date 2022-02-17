@@ -72,6 +72,10 @@ class Dataset(data.Dataset):
         return extreme_points
 
     def prepare_detection(self, box, poly, ct_hm, cls_id, wh, ct_cls, ct_ind):
+
+        # 返回detect_box 的center大小和box的长宽
+        # 输入的box是在x轴和y轴上输出最大最小的得到的，这里输出的box是在center上加上w/2和h/2得到的
+
         ct_hm = ct_hm[cls_id]
         ct_cls.append(cls_id)
 
@@ -121,6 +125,7 @@ class Dataset(data.Dataset):
         ct_ind.append(ct[1] * ct_hm.shape[1] + ct[0])
 
     def prepare_init(self, box, extreme_point, i_it_4pys, c_it_4pys, i_gt_4pys, c_gt_4pys, h, w):
+        # 该函数返回菱形的40个采样点
         x_min, y_min = np.min(extreme_point[:, 0]), np.min(extreme_point[:, 1])
         x_max, y_max = np.max(extreme_point[:, 0]), np.max(extreme_point[:, 1])
 
@@ -136,6 +141,7 @@ class Dataset(data.Dataset):
         c_gt_4pys.append(can_gt_poly)
 
     def prepare_evolution(self, poly, extreme_point, img_init_polys, can_init_polys, img_gt_polys, can_gt_polys):
+        # 返回八边形的128个点
         x_min, y_min = np.min(extreme_point[:, 0]), np.min(extreme_point[:, 1])
         x_max, y_max = np.max(extreme_point[:, 0]), np.max(extreme_point[:, 1])
 
@@ -175,6 +181,10 @@ class Dataset(data.Dataset):
         extreme_points = self.get_extreme_points(instance_polys)
 
         # detection
+        # ct_hm ct:center
+        # wh  width and height
+        # ct_cls center cls
+        # ct_in center index
         output_h, output_w = inp_out_hw[2:]
         ct_hm = np.zeros([cfg.heads.ct_hm, output_h, output_w], dtype=np.float32)
         wh = []
@@ -182,12 +192,22 @@ class Dataset(data.Dataset):
         ct_ind = []
 
         # init
+        # i_it_4pys 在diamond上的40个采样点
+        # c_it_4pys 标准化后的40个采样点
+        # i_gt_4pys groundtruth的4个点
+        # c_gt_4pys 标准化的groundtruth4个点
+
         i_it_4pys = []
         c_it_4pys = []
         i_gt_4pys = []
         c_gt_4pys = []
 
         # evolution
+        # i_it_pys 在八边形上采样的128个点
+        # c_it_pys 标准化后的128个点
+        # i_gt_py 在gt上采样的128个点
+        # c_gt_py 在gt上标准化后的128个点
+
         i_it_pys = []
         c_it_pys = []
         i_gt_pys = []

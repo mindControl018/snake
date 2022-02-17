@@ -99,6 +99,7 @@ def prepare_training_box(ret, batch, init):
 
 
 def prepare_training(ret, batch):
+    # 将batch中的每个图片的多边形放到一起
     ct_01 = batch['ct_01'].byte()
     init = {}
     init.update({'i_it_4py': collect_training(batch['i_it_4py'], ct_01)})

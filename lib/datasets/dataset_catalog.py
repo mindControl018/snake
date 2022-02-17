@@ -5,20 +5,20 @@ class DatasetCatalog(object):
     dataset_attrs = {
         'CocoTrain': {
             'id': 'coco',
-            'data_root': 'data/coco/train2017',
-            'ann_file': 'data/coco/annotations/instances_train2017.json',
+            'data_root': '/chengang1/LiuYan/Dataset/COCO/train2017',
+            'ann_file': '/chengang1/LiuYan/Dataset/COCO/annotations/instances_train2017.json',
             'split': 'train'
         },
         'CocoVal': {
             'id': 'coco',
-            'data_root': 'data/coco/val2017',
-            'ann_file': 'data/coco/annotations/instances_val2017.json',
+            'data_root': '/chengang1/LiuYan/Dataset/COCO/val2017',
+            'ann_file': '/chengang1/LiuYan/Dataset/COCO/annotations/instances_val2017.json',
             'split': 'test'
         },
         'CocoMini': {
             'id': 'coco',
-            'data_root': 'data/coco/val2017',
-            'ann_file': 'data/coco/annotations/instances_val2017.json',
+            'data_root': '/chengang1/LiuYan/Dataset/COCO/val2017',
+            'ann_file': '/chengang1/LiuYan/Dataset/COCO/annotations/instances_val2017.json',
             'split': 'mini'
         },
         'CocoTest': {
@@ -28,8 +28,7 @@ class DatasetCatalog(object):
             'split': 'test'
         },
         'CityscapesTrain': {
-            'id': 'cityscapes',
-            'data_root': 'data/cityscapes/leftImg8bit',
+             'data_root': 'data/cityscapes/leftImg8bit',
             'ann_file': ('data/cityscapes/annotations/train', 'data/cityscapes/annotations/train_val'),
             'split': 'train'
         },
@@ -63,20 +62,20 @@ class DatasetCatalog(object):
         },
         'SbdTrain': {
             'id': 'sbd',
-            'data_root': 'data/sbd/img',
-            'ann_file': 'data/sbd/annotations/sbd_train_instance.json',
+            'data_root': '/chengang1/LiuYan/Dataset/sbd/img',
+            'ann_file': '/chengang1/LiuYan/Dataset/sbd/annotations/sbd_train_instance.json',
             'split': 'train'
         },
         'SbdVal': {
             'id': 'sbd',
-            'data_root': 'data/sbd/img',
-            'ann_file': 'data/sbd/annotations/sbd_trainval_instance.json',
+            'data_root': '/chengang1/LiuYan/Dataset/sbd/img',
+            'ann_file': '/chengang1/LiuYan/Dataset/sbd/annotations/sbd_trainval_instance.json',
             'split': 'val'
         },
         'SbdMini': {
             'id': 'sbd',
-            'data_root': 'data/sbd/img',
-            'ann_file': 'data/sbd/annotations/sbd_trainval_instance.json',
+            'data_root': '/chengang1/LiuYan/Dataset/sbd/img',
+            'ann_file': '/chengang1/LiuYan/Dataset/sbd/annotations/sbd_trainval_instance.json',
             'split': 'mini'
         },
         'VocVal': {

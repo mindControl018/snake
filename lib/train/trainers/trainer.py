@@ -30,6 +30,7 @@ class Trainer(object):
         self.network.train()
         end = time.time()
         for iteration, batch in enumerate(data_loader):
+            print(iteration)
             data_time = time.time() - end
             iteration = iteration + 1
             recorder.step += 1
