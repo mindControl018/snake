@@ -129,7 +129,7 @@ class Dataset(data.Dataset):
         x_min, y_min = np.min(extreme_point[:, 0]), np.min(extreme_point[:, 1])
         x_max, y_max = np.max(extreme_point[:, 0]), np.max(extreme_point[:, 1])
 
-        img_init_poly = snake_voc_utils.get_init(box)
+        img_init_poly = snake_voc_utils.get_init(box) # 获得一个菱形的边框（4个点）
         img_init_poly = snake_voc_utils.uniformsample(img_init_poly, snake_config.init_poly_num)
         can_init_poly = snake_voc_utils.img_poly_to_can_poly(img_init_poly, x_min, y_min, x_max, y_max)
         img_gt_poly = extreme_point
@@ -177,11 +177,11 @@ class Dataset(data.Dataset):
                 snake_config.mean, snake_config.std, instance_polys
             )
         instance_polys = self.transform_original_data(instance_polys, flipped, width, trans_output, inp_out_hw)
-        instance_polys = self.get_valid_polys(instance_polys, inp_out_hw)
-        extreme_points = self.get_extreme_points(instance_polys)
+        instance_polys = self.get_valid_polys(instance_polys, inp_out_hw)  # 这两行是获取合法的轮廓，因为在裁剪过程中，可能会丢失部分轮廓
+        extreme_points = self.get_extreme_points(instance_polys)  # extreme_points 是取出的轮廓最上，最下，最左，最右四个点
 
         # detection
-        # ct_hm ct:center
+        # ct_hm ct:center heatmap
         # wh  width and height
         # ct_cls center cls
         # ct_in center index
@@ -222,6 +222,7 @@ class Dataset(data.Dataset):
                 poly = instance_poly[j]
                 extreme_point = instance_points[j]
 
+
                 x_min, y_min = np.min(poly[:, 0]), np.min(poly[:, 1])
                 x_max, y_max = np.max(poly[:, 0]), np.max(poly[:, 1])
                 bbox = [x_min, y_min, x_max, y_max]
@@ -240,6 +241,7 @@ class Dataset(data.Dataset):
         ret.update(detection)
         ret.update(init)
         ret.update(evolution)
+
         # visualize_utils.visualize_snake_detection(orig_img, ret)
         # visualize_utils.visualize_snake_evolution(orig_img, ret)
 

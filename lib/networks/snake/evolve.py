@@ -81,6 +81,7 @@ class Evolution(nn.Module):
     def forward(self, output, cnn_feature, batch=None):
         ret = output
 
+
         if batch is not None and 'test' not in batch['meta']:
             with torch.no_grad():
                 init = self.prepare_training(output, batch)

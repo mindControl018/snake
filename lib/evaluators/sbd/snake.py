@@ -22,7 +22,7 @@ class Evaluator:
         os.system('mkdir -p {}'.format(self.result_dir))
 
         args = DatasetCatalog.get(cfg.test.dataset)
-        ann_file = '/chengang1/LiuYan/Dataset/sbd/annotations/sbd_val_instance.json'
+        ann_file = '/home/chengang/chengang/LiuYan_1/LiuYan/Dataset/sbd/annotations/sbd_val_instance.json'
         self.coco = coco.COCO(ann_file)
 
         self.json_category_id_to_contiguous_id = {

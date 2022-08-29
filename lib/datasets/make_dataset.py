@@ -49,6 +49,7 @@ def make_data_loader(cfg, is_train=True, is_distributed=False, max_iter=-1):
     if is_train:
         batch_size = cfg.train.batch_size
         shuffle = True
+
         drop_last = False
     else:
         batch_size = cfg.test.batch_size
@@ -57,7 +58,8 @@ def make_data_loader(cfg, is_train=True, is_distributed=False, max_iter=-1):
 
     dataset_name = cfg.train.dataset if is_train else cfg.test.dataset
 
-    transforms = make_transforms(cfg, is_train)
+    # transforms = make_transforms(cfg, is_train)
+    transforms = None
     dataset = make_dataset(cfg, dataset_name, transforms, is_train)
     sampler = make_data_sampler(dataset, shuffle)
     batch_sampler = make_batch_data_sampler(cfg, sampler, batch_size, drop_last, max_iter)

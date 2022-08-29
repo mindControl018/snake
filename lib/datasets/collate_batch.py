@@ -2,10 +2,68 @@ from torch.utils.data.dataloader import default_collate
 import torch
 import numpy as np
 
+def medical_collator(batch):
+    ret = {'inp': default_collate([b['inp'] for b in batch])}
+    query_label = default_collate([b['query_label'] for b in batch])
+    meta = default_collate([b['meta'] for b in batch])
+    support_image_list = default_collate([b['support_image_list'] for b in batch])
+    support_label_list =  default_collate([b['support_label_list'] for b in batch])
+
+    s_xs = support_image_list
+    s_x = s_xs[0].unsqueeze(0)
+    for i in range(1, len(support_image_list)):
+        s_x = torch.cat([s_xs[i].unsqueeze(0), s_x], 0)
+
+    s_ys = support_label_list
+    s_y = s_ys[0].unsqueeze(0)
+    for i in range(1, len(support_label_list)):
+        s_y = torch.cat([s_ys[i].unsqueeze(0). s_y], 0)
+
+    ret.update({'meta': meta})
+    ret.update({'query_label': query_label})
+    ret.update({'support_image_list': s_x})
+    ret.update({'support_label_list': s_y})
+
+    batch_size = len(batch)
+    ct_num = torch.max(meta['ct_num'])
+    ct_01 = torch.zeros([batch_size, ct_num], dtype=torch.uint8)
+    for i in range(batch_size):
+        ct_01[i, :meta['ct_num'][i]] = 1
+    detection = {'ct_01': ct_01.float()}
+    ret.update(detection)
+
+    # init
+
+    from lib.utils.snake import snake_config
+    i_it_4pys = torch.zeros([batch_size, ct_num, snake_config.init_poly_num, 2], dtype=torch.float)
+    c_it_4pys = torch.zeros([batch_size, ct_num, snake_config.init_poly_num, 2], dtype=torch.float)
+    i_gt_4pys = torch.zeros([batch_size, ct_num, 4, 2], dtype=torch.float)
+    c_gt_4pys = torch.zeros([batch_size, ct_num, 4, 2], dtype=torch.float)
+    if ct_num != 0:
+        i_it_4pys[ct_01] = torch.Tensor(sum([b['i_it_4py'] for b in batch], []))
+        c_it_4pys[ct_01] = torch.Tensor(sum([b['c_it_4py'] for b in batch], []))
+        i_gt_4pys[ct_01] = torch.Tensor(sum([b['i_gt_4py'] for b in batch], []))
+        c_gt_4pys[ct_01] = torch.Tensor(sum([b['c_gt_4py'] for b in batch], []))
+    init = {'i_it_4py': i_it_4pys, 'c_it_4py': c_it_4pys, 'i_gt_4py': i_gt_4pys, 'c_gt_4py': c_gt_4pys}
+    ret.update(init)
+
+    # evolution
+    i_it_pys = torch.zeros([batch_size, ct_num, snake_config.poly_num, 2], dtype=torch.float)
+    c_it_pys = torch.zeros([batch_size, ct_num, snake_config.poly_num, 2], dtype=torch.float)
+    i_gt_pys = torch.zeros([batch_size, ct_num, snake_config.gt_poly_num, 2], dtype=torch.float)
+    c_gt_pys = torch.zeros([batch_size, ct_num, snake_config.gt_poly_num, 2], dtype=torch.float)
+    if ct_num != 0:
+        i_it_pys[ct_01] = torch.Tensor(sum([b['i_it_py'] for b in batch], []))
+        c_it_pys[ct_01] = torch.Tensor(sum([b['c_it_py'] for b in batch], []))
+        i_gt_pys[ct_01] = torch.Tensor(sum([b['i_gt_py'] for b in batch], []))
+        c_gt_pys[ct_01] = torch.Tensor(sum([b['c_gt_py'] for b in batch], []))
+    evolution = {'i_it_py': i_it_pys, 'c_it_py': c_it_pys, 'i_gt_py': i_gt_pys, 'c_gt_py': c_gt_pys}
+    ret.update(evolution)
+
+    return ret
 
 def snake_collator(batch):
     ret = {'inp': default_collate([b['inp'] for b in batch])}
-
     meta = default_collate([b['meta'] for b in batch])
     ret.update({'meta': meta})
 
@@ -14,7 +72,7 @@ def snake_collator(batch):
 
     # detection
     ct_hm = default_collate([b['ct_hm'] for b in batch])
-
+    # 取所有图片中有最多数量的轮廓数量
     batch_size = len(batch)
     ct_num = torch.max(meta['ct_num'])
     wh = torch.zeros([batch_size, ct_num, 2], dtype=torch.float)
@@ -26,6 +84,7 @@ def snake_collator(batch):
         ct_01[i, :meta['ct_num'][i]] = 1
 
     if ct_num != 0:
+        a = torch.Tensor(sum([b['wh'] for b in batch], []))
         wh[ct_01] = torch.Tensor(sum([b['wh'] for b in batch], []))
         # reg[ct_01] = torch.Tensor(sum([b['reg'] for b in batch], []))
         ct_cls[ct_01] = torch.LongTensor(sum([b['ct_cls'] for b in batch], []))
@@ -243,13 +302,14 @@ _collators = {
     'snake': snake_collator,
     'ct': snake_collator,
     'rcnn_snake': rcnn_snake_collator,
-    'ct_rcnn': rcnn_snake_collator
+    'ct_rcnn': rcnn_snake_collator,
+    'medical': medical_collator
 }
 
 
 def make_collator(cfg):
     if cfg.task in _collators:
-        return _collators[cfg.task]
+        return _collators[cfg.collator]
     else:
         return default_collate
 

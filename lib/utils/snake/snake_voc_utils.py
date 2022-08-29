@@ -54,6 +54,7 @@ def xywh_to_xyxy(boxes):
 
 def augment(img, split, _data_rng, _eig_val, _eig_vec, mean, std, polys=None):
     # resize input
+    # 将图像进行随机缩放
     height, width = img.shape[0], img.shape[1]
     center = np.array([img.shape[1] / 2., img.shape[0] / 2.], dtype=np.float32)
     scale = max(img.shape[0], img.shape[1]) * 1.0
@@ -65,12 +66,13 @@ def augment(img, split, _data_rng, _eig_val, _eig_vec, mean, std, polys=None):
     if split == 'train':
         scale = scale * np.random.uniform(0.6, 1.4)
         x, y = center
-        w_border = data_utils.get_border(width/4, scale[0]) + 1
+        w_border = data_utils.get_border(width/4, scale[0]) + 1 # 在center处生成一个方框用于随机生成新center完成裁剪
         h_border = data_utils.get_border(height/4, scale[0]) + 1
         center[0] = np.random.randint(low=max(x - w_border, 0), high=min(x + w_border, width - 1))
         center[1] = np.random.randint(low=max(y - h_border, 0), high=min(y + h_border, height - 1))
 
         # flip augmentation
+        # 是否翻转
         if np.random.random() < 0.5:
             flipped = True
             img = img[:, ::-1, :]
@@ -85,6 +87,7 @@ def augment(img, split, _data_rng, _eig_val, _eig_vec, mean, std, polys=None):
         input_w, input_h = 512, 512
         # input_w, input_h = (width + x - 1) // x * x, (height + x - 1) // x * x
 
+    # 获得仿射变换的矩阵，并将图片变化到512，512的大小
     trans_input = data_utils.get_affine_transform(center, scale, 0, [input_w, input_h])
     inp = cv2.warpAffine(img, trans_input, (input_w, input_h), flags=cv2.INTER_LINEAR)
 

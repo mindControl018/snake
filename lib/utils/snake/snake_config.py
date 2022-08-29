@@ -44,7 +44,7 @@ train_nearest_gt = True
 
 ct_score = cfg.ct_score
 
-ro = 4
+ro = 1
 
 segm_or_bbox = 'segm'
 

@@ -8,7 +8,7 @@ from lib.config import cfg
 
 
 class Network(nn.Module):
-    def __init__(self, num_layers, heads, head_conv=256, down_ratio=4, det_dir=''):
+    def __init__(self, num_layers, heads, head_conv=256, down_ratio=4, shot=1, det_dir=''):
         super(Network, self).__init__()
 
         self.dla = DLASeg('dla{}'.format(num_layers), heads,
@@ -17,6 +17,7 @@ class Network(nn.Module):
                           final_kernel=1,
                           last_level=5,
                           head_conv=head_conv)
+        self.shot = shot
         self.gcn = Evolution()
 
     def decode_detection(self, output, h, w):
@@ -64,6 +65,6 @@ class Network(nn.Module):
         return output
 
 
-def get_network(num_layers, heads, head_conv=256, down_ratio=4, det_dir=''):
-    network = Network(num_layers, heads, head_conv, down_ratio, det_dir)
+def get_network(num_layers, heads, head_conv=256, down_ratio=4, shot=1, det_dir=''):
+    network = Network(num_layers, heads, head_conv, down_ratio, shot,det_dir)
     return network

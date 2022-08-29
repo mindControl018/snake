@@ -30,7 +30,6 @@ class Trainer(object):
         self.network.train()
         end = time.time()
         for iteration, batch in enumerate(data_loader):
-            print(iteration)
             data_time = time.time() - end
             iteration = iteration + 1
             recorder.step += 1
@@ -53,6 +52,8 @@ class Trainer(object):
             end = time.time()
             recorder.batch_time.update(batch_time)
             recorder.data_time.update(data_time)
+
+
 
             if iteration % 20 == 0 or iteration == (max_iter - 1):
                 # print training state
@@ -98,6 +99,7 @@ class Trainer(object):
         if evaluator is not None:
             result = evaluator.summarize()
             val_loss_stats.update(result)
+            print("val_dice: {:.4f}".format(result['dice']))
 
         if recorder:
             recorder.record('val', epoch, val_loss_stats, image_stats)

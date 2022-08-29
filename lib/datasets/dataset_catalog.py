@@ -62,20 +62,20 @@ class DatasetCatalog(object):
         },
         'SbdTrain': {
             'id': 'sbd',
-            'data_root': '/chengang1/LiuYan/Dataset/sbd/img',
-            'ann_file': '/chengang1/LiuYan/Dataset/sbd/annotations/sbd_train_instance.json',
+            'data_root': '/home/chengang/chengang/LiuYan_1/LiuYan/Dataset/sbd/img',
+            'ann_file': '/home/chengang/chengang/LiuYan_1/LiuYan/Dataset/sbd/annotations/sbd_trainval_box_instance.json',
             'split': 'train'
         },
         'SbdVal': {
             'id': 'sbd',
-            'data_root': '/chengang1/LiuYan/Dataset/sbd/img',
-            'ann_file': '/chengang1/LiuYan/Dataset/sbd/annotations/sbd_trainval_instance.json',
+            'data_root': '/home/chengang/chengang/LiuYan_1/LiuYan/Dataset/sbd/img',
+            'ann_file': '/home/chengang/chengang/LiuYan_1/LiuYan/Dataset/sbd/annotations/sbd_trainval_instance.json',
             'split': 'val'
         },
         'SbdMini': {
             'id': 'sbd',
-            'data_root': '/chengang1/LiuYan/Dataset/sbd/img',
-            'ann_file': '/chengang1/LiuYan/Dataset/sbd/annotations/sbd_trainval_instance.json',
+            'data_root': '/home/chengang/chengang/LiuYan_1/LiuYan/Dataset/sbd/img',
+            'ann_file': '/home/chengang/chengang/LiuYan_1/LiuYan/Dataset/sbd/annotations/sbd_trainval_instance.json',
             'split': 'mini'
         },
         'VocVal': {
@@ -101,6 +101,30 @@ class DatasetCatalog(object):
             'data_root': 'data/kitti/testing/image_2',
             'ann_file': 'data/kitti/testing/instances_val.json',
             'split': 'mini'
+        },
+        'SABSTrain':{
+            'id':'SABS',
+            'mode': 'train',
+            'which_dataset': 'SABS',
+            'idx_split': 0,
+            'min_fg': '100',
+            'shot': 1,
+            'test_class': 'SPLEEN',
+            'tile_z_dim': 3,
+            'data_dir': '/home/chengang/chengang/LiuYan_1/LiuYan/SSL-ALPNet/data/SABS/case_slice_data',
+            'list_dir': '/home/chengang/chengang/LiuYan_1/LiuYan/SSL-ALPNet/data/SABS/slice_list.txt',
+        },
+        'SABSVal':{
+            'id':'SABS',
+            'mode': 'val',
+            'which_dataset': 'SABS',
+            'idx_split': 0,
+            'min_fg': '100',
+            'shot': 1,
+            'test_class': 'SPLEEN',
+            'tile_z_dim': 3,
+            'data_dir': '/home/chengang/chengang/LiuYan_1/LiuYan/SSL-ALPNet/data/SABS/case_slice_data',
+            'list_dir': '/home/chengang/chengang/LiuYan_1/LiuYan/SSL-ALPNet/data/SABS/slice_list.txt',
         }
     }
 
